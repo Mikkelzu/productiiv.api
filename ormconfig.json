@@ -1,0 +1,9 @@
+{
+    "type": "mysql",
+    "host": "localhost",
+    "username": "root",
+    "password": "fc7ss3d4vj",
+    "database": "test_db",
+    "entities": ["dist/**/*.entity{.ts,.js}"],
+    "synchronize": true
+  }
