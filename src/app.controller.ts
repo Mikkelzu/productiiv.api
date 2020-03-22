@@ -40,9 +40,10 @@ export class AppController {
 
 	@UseGuards(JwtAuthGuard)
 	@Get('profile')
-	getProfile(@Request() request, @Cookies() cookies) {
+	getProfile(@Request() request) {
 		
-		return request.user;
+		// return request.user;
+		return this.userService.findSingleUserById(request.user.userId)
 	}
 
 	@UseGuards(JwtAuthGuard)
