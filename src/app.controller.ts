@@ -17,10 +17,15 @@ export class AppController {
 		request._cookies = [{
 			name: 'access_token',
 			value: jwtAuthToken,
-			
+			options: {
+				signed: false,
+				domain: 'localhost',
+				httpOnly: true,
+			secure: false,
+			sameSite: 'strict',
+			path: '/'
+		},
 		}];
-
-		console.log(request._cookies)
 
 		return request.user;
 		// return this.authService.login(request.user);
@@ -38,9 +43,20 @@ export class AppController {
 		return request.user;
 	}
 
+	@UseGuards(JwtAuthGuard)
+	@Post('auth/logout')
+	logout() {
+
+	}
+
 	@Get('test')
 	test(@Cookies() cookies) {
-		console.log('cookies:' + cookies)
-		return cookies;
+		if (cookies.access_token) {
+			return {cookies: cookies}
+			
+		}
+		else {
+			return { error: 'lmao err', message: 'nothing' }
+		}
 	}
 }
