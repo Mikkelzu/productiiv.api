@@ -3,10 +3,12 @@ import { LocalAuthGuard } from './auth/local-auth.guard';
 import { AuthService } from './auth/auth.service';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { SetCookies, Cookies } from '@nestjsplus/cookies';
+import { UsersService } from './users/users.service';
 
 @Controller()
 export class AppController {
-	constructor(private readonly authService: AuthService) { }
+	constructor(private readonly authService: AuthService,
+		private readonly userService: UsersService) { }
 
 	@SetCookies()
 	@UseGuards(LocalAuthGuard)
@@ -36,11 +38,20 @@ export class AppController {
 		return this.authService.register(req.body);
 	}
 
-	@UseGuards(JwtAuthGuard)
+	//UseGuards(JwtAuthGuard)
 	@Get('profile')
 	getProfile(@Request() request, @Cookies() cookies) {
-		console.log(cookies)
-		return request.user;
+		
+		if (!cookies.access_token) {
+			return { error: 'Error', message: 'No authentication cookie found' }
+		}
+
+		const tokenDecoded = this.authService.decodeToken(cookies.access_token);
+
+		console.log(tokenDecoded);
+		
+
+		return this.userService.findOne(tokenDecoded['username']);
 	}
 
 	@UseGuards(JwtAuthGuard)
@@ -49,6 +60,7 @@ export class AppController {
 
 	}
 
+	@UseGuards(JwtAuthGuard)
 	@Get('test')
 	test(@Cookies() cookies) {
 		if (cookies.access_token) {

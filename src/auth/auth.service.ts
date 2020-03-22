@@ -25,6 +25,11 @@ export class AuthService {
         return this.jwtService.sign(payload)
     }
 
+
+    decodeToken(token) {
+        return this.jwtService.decode(token);
+    }
+
     async logout() {
 
     }
