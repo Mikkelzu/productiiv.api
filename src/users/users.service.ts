@@ -7,29 +7,35 @@ import { Repository } from 'typeorm';
 @Injectable()
 export class UsersService {
 
-    constructor(
-      @InjectRepository(User)
-      private userRepository: Repository<User>
-    ) { }
+	constructor(
+		@InjectRepository(User)
+		private userRepository: Repository<User>
+	) { }
 
 
-    async findOne(username): Promise<User | undefined> {
-        return this.userRepository.findOne({username: username});
-    }
+	async findOne(username: string): Promise<any | undefined> {
+		return this.userRepository.findOne({ username: username });
 
-    async createOne(newUser: User): Promise<any | undefined> {
-      return this.userRepository.save(newUser)
-          .catch((exception) => {
-              
-              if (exception.code === 'ER_DUP_ENTRY') {
-                  throw new HttpException({
-                      status: HttpStatus.CONFLICT,
-                      error: 'The provided email and/or username is already in use.',
-                    }, HttpStatus.CONFLICT);
-              }
-              
-              
-          })
-  }
+	}
+
+	async createOne(newUser: User): Promise<any | undefined> {
+		return this.userRepository.save(newUser)
+			.catch((exception) => {
+
+				if (exception.code === 'ER_DUP_ENTRY') {
+					throw new HttpException({
+						status: HttpStatus.CONFLICT,
+						error: 'The provided email and/or username is already in use.',
+					}, HttpStatus.CONFLICT);
+				}
+
+
+			})
+	}
+
+	getMetrics(): Promise<any | undefined> {
+
+		return;
+	}
 
 }
