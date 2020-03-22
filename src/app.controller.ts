@@ -38,20 +38,11 @@ export class AppController {
 		return this.authService.register(req.body);
 	}
 
-	//UseGuards(JwtAuthGuard)
+	@UseGuards(JwtAuthGuard)
 	@Get('profile')
 	getProfile(@Request() request, @Cookies() cookies) {
 		
-		if (!cookies.access_token) {
-			return { error: 'Error', message: 'No authentication cookie found' }
-		}
-
-		const tokenDecoded = this.authService.decodeToken(cookies.access_token);
-
-		console.log(tokenDecoded);
-		
-
-		return this.userService.findOne(tokenDecoded['username']);
+		return request.user;
 	}
 
 	@UseGuards(JwtAuthGuard)
