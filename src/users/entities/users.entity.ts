@@ -1,4 +1,5 @@
-import { PrimaryGeneratedColumn, Column, Entity } from "typeorm";
+import { PrimaryGeneratedColumn, Column, Entity, OneToMany } from "typeorm";
+import Activity from "src/database/entities/activity.entity";
 
 @Entity()
 export default class User{
@@ -23,6 +24,9 @@ export default class User{
 
     @Column()
     registerDate: string;
+
+    @OneToMany(type => Activity, activity => activity.user)
+    activity: Activity[];
 
     /**
      * Todo add stuff like isActive, SubscriptionType.
