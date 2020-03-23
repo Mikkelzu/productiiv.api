@@ -1,8 +1,8 @@
-import { Controller, Request, Post, UseGuards, Get } from '@nestjs/common';
+import { Controller, Request, Post, UseGuards, Get, Render } from '@nestjs/common';
 import { LocalAuthGuard } from './auth/local-auth.guard';
 import { AuthService } from './auth/auth.service';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
-import { SetCookies, Cookies } from '@nestjsplus/cookies';
+import { SetCookies, Cookies, ClearCookies } from '@nestjsplus/cookies';
 import { UsersService } from './users/users.service';
 
 @Controller()
@@ -47,9 +47,11 @@ export class AppController {
 	}
 
 	@UseGuards(JwtAuthGuard)
-	@Post('auth/logout')
-	logout() {
-
+	@ClearCookies('access_token')
+	@Get('auth/logout')
+	logout(@Request() req) {
+		console.log(req)
+		return { success: true, message: 'cookie cleared.', cookie: req.cookies }
 	}
 
 	@UseGuards(JwtAuthGuard)
